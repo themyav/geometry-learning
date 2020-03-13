@@ -1,4 +1,6 @@
+#include "core.h"
 #include "scenery.h"
+#include "pngimage.h"
 //#include "tgaimage.cpp"
 #include <bits/stdc++.h>
 

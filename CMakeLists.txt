@@ -3,4 +3,4 @@ project(project_looch)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(project_looch _main.cpp)
+add_executable(project_looch _main.cpp core.h scenery.h pngimage.h)
