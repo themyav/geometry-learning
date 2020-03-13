@@ -1,6 +1,7 @@
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
 
+#include "core.h"
 #include <fstream>
 
 #pragma pack(push,1)
@@ -34,10 +35,14 @@ struct TGAColor {
 
 	TGAColor() : val(0), bytespp(1) {
 	}
-
+ 
 	TGAColor(unsigned char R, unsigned char G, unsigned char B, unsigned char A) : b(B), g(G), r(R), a(A), bytespp(4) {
 	}
 
+	// MODIFIED
+	TGAColor(Color c) : b(c.b), g(c.g), r(c.r), a(c.a), bytespp(4) {
+	}
+	
 	TGAColor(int v, int bpp) : val(v), bytespp(bpp) {
 	}
 
