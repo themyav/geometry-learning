@@ -2,8 +2,9 @@
 #define PROJECT_LOOCH_SCENERY_H
 
 #include "core.h"
-
 #include <vector>
+#include <string>
+#include <fstream>
 
 struct Sphere {
     double r;
@@ -13,6 +14,7 @@ struct Sphere {
     double refl;
     
     Sphere() = default;
+    
     Sphere(Point c_, double r_, int red_, int green_, int blue_, unsigned int shrp_, double refl_);
 };
 
@@ -21,7 +23,8 @@ struct Light {
     Point c;
     
     Light() = default;
-    Light(double str_, double x_, double y_, double z_);
+    
+    Light(Point c_, double str_);
 };
 
 struct Camera {
@@ -31,21 +34,26 @@ struct Camera {
     double rx;
     double ry;
     double rz;
+    double FOV;
     
     Camera() = default;
-    Camera(double x_, double y_, double z_, int h_, int w_, double rx_, double ry_, double rz_);
     
+    Camera(Point c_, int h_, int w_, double rx_, double ry_, double rz_, double FOV);
 };
 
 
 struct Scene {
     std::vector<Camera> cameras;
     std::vector<Sphere> spheres;
-    std::vector<Light> lights;
-    Light light_d;
+    std::vector<Light> lights_p;
+    std::vector<Light> lights_d;
     double light_a;
+    std::string output_file_path;
+    Color background;
     
-    Scene () = default;
+    Scene() = default;
+    
+    Scene(std::string path);
 };
 
-#endif //PROJECT_LOOCH_SCENERY_H
+#endif

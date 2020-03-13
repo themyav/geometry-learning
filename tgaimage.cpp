@@ -1,33 +1,6 @@
 #include "bits/stdc++.h"
 #include "tgaimage.h"
 
-template<typename T>
-T max(T a, T b) {
-    if (a > b) return a;
-    return b;
-}
-template<typename T>
-T min(T a, T b) {
-    if (a < b) return a;
-    return b;
-}
-template<typename T>
-T to_range(T a, T min_, T max_) {
-    return min(max_, max(min_, a));
-}
-
-TGAColor mix(TGAColor a, TGAColor b) {
-    return TGAColor((a.r + b.r) / 2, (a.g + b.g) / 2, (a.b + b.b) / 2, 255);
-}
-
-TGAColor operator*(TGAColor a, double k) {
-    return TGAColor(to_range(a.r * k, 0., 255.), to_range(a.g * k, 0., 255.), to_range(a.b * k, 0., 255.), 255);
-}
-
-TGAColor operator+(TGAColor a, TGAColor b) {
-    return TGAColor(to_range(a.r + b.r, 0, 255), to_range(a.g + b.g, 0, 255), to_range(a.b + b.b, 0, 255), 255);
-}
-
 TGAImage::TGAImage() : data(NULL), width(0), height(0), bytespp(0) {
 }
 
