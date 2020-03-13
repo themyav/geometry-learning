@@ -34,7 +34,7 @@ struct Camera {
     double rx;
     double ry;
     double rz;
-    double FOV;
+    double fov;
     
     Camera() = default;
     
@@ -52,7 +52,6 @@ struct Scene {
     Color background;
     
     Scene() = default;
-    
     Scene(std::string path);
 };
 

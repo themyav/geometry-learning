@@ -1,4 +1,4 @@
-#include "Scenery.cpp"
+#include "scenery.cpp"
 //#include "tgaimage.cpp"
 #include <bits/stdc++.h>
 

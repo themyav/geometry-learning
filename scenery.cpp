@@ -8,16 +8,21 @@ Sphere::Sphere(Point c_, double r_, int red_, int green_, int blue_, unsigned in
     refl = refl_;
 }
 
-Light::Light(double str_, double x_, double y_, double z_) {
-    c = Point(x_, y_, z_);
+Light::Light(Point c_, double str_) {
+    c = c_;
     str = str_;
 }
 
-Camera::Camera(double x_, double y_, double z_, int h_, int w_, double rx_, double ry_, double rz_) {
-    c = Point(x_, y_, z_);
+Camera::Camera(Point c_, int h_, int w_, double rx_, double ry_, double rz_, double FOV) {
+    c = c_;
     h = h_;
     w_ = w_;
     rx = rx_;
     ry = ry_;
     rz = rz_;
+    fov = FOV;
+}
+
+Scene::Scene(std::string path) {
+    // TODO
 }
