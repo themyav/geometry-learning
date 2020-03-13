@@ -1,8 +1,10 @@
+#include <vector>
+#include <iostream>
+
 #include "core.h"
 #include "scenery.h"
-#include "pngimage.h"
-//#include "tgaimage.cpp"
-#include <bits/stdc++.h>
+//#include "pngimage.h"
+#include "tgaimage.cpp"
 
 #define RGB_MODE 1
 #define COS_MODE 2
@@ -18,14 +20,30 @@ using namespace std;
 // ============================ Global variables ============================
 Point cam = Point(0, 0, 0);
 
-const double d = 1.;
-const double FOV_h = 60;
-const double FOV_v = 35;
+double d = 1.;
+double FOV_h = 60;
+double FOV_v = 35;
 
 int width;
 int height;
 
-const TGAColor BACKGROUND_COLOR = TGAColor(160, 160, 160, 255);
+TGAColor BACKGROUND_COLOR = TGAColor(160, 160, 160, 255);
+
+vector<Sphere> spheres = {
+        //      x   y      z  rad    r    g    b  shrp  refl
+        Sphere(Point(10, -3, -1), 0.5, 0, 255, 255, 20, 0.3),
+        Sphere(Point(15, 5, 0), 2, 255, 0, 255, 100, 0),
+        Sphere(Point(15, 1, 0), 1, 0, 0, 255, 25, 0.15),
+        Sphere(Point(25, -6, 1), 3, 255, 255, 0, 15, 0.7),
+        Sphere(Point(8, -2, 1), 0.5, 0, 255, 0, 75, 0),
+        //Sphere(0, 0, -1005, 999, 255, 255, 255, 30, 1)
+};
+
+vector<Light> lights_p = {
+        //Light(0.4, 3, -3, 10)
+};
+Light light_d = Light(0.7, -1, 3, 3); // Directional light
+double light_a = 0; // Ambient light
 
 // ============================== Low functions =============================
 double len(Point a) {
@@ -81,24 +99,24 @@ pair<int, double> ray_to_sphere(Point o, Point dir) {
 pair<double, double> get_lightning(Point here, Sphere sphere) {
     double here_light_d = light_a;
     double here_light_s = 0;
-    const Point norm = get_normal(sphere, here);
-    const Point toLight = light_d.c - here;
+    Point norm = get_normal(sphere, here);
+    Point toLight = light_d.c - here;
     if (ray_to_sphere(here, toLight).first == -1) {
-        here_light_d += light_d.strength * get_cos(norm, toLight - norm);
-        if (sphere.sharpeness != 0) {
-            here_light_s += light_d.strength * pow(get_cos(here * -1., reflect(norm, toLight)), sphere.sharpeness);
+        here_light_d += light_d.str * get_cos(norm, toLight - norm);
+        if (sphere.shrp != 0) {
+            here_light_s += light_d.str * pow(get_cos(here * -1., reflect(norm, toLight)), sphere.shrp);
         }
     }
 
     for (auto i : lights_p) {
-        const Point toLight = i.c - here;
+        Point toLight = i.c - here;
         pair<int, double> result = ray_to_sphere(here, toLight);
         if (result.first == -1 || result.second >= len(toLight)) {
             // diffuse
-            here_light_d += i.strength * get_cos(norm, toLight - norm);
+            here_light_d += i.str * get_cos(norm, toLight - norm);
             // specular
-            if (sphere.sharpeness != 0) {
-                here_light_s += i.strength * pow(get_cos(here * -1., reflect(norm, toLight)), sphere.sharpeness);
+            if (sphere.shrp != 0) {
+                here_light_s += i.str * pow(get_cos(here * -1., reflect(norm, toLight)), sphere.shrp);
             }
         }
     }
@@ -112,12 +130,12 @@ TGAColor get_color(Point here, Sphere sphere, unsigned int bounces) {
     double here_light_d = result.first, here_light_s = result.second;
     // DO REFLECTION
     TGAColor here_color_d;
-    if (sphere.reflectivity != 0) {
+    if (sphere.refl != 0) {
         int i_hit_r;
         Point dir_r = reflect(get_normal(sphere, here), here * -1.);
         pair<int, double> res = ray_to_sphere(here, dir_r);
         i_hit_r = res.first;
-        double k = sphere.reflectivity;
+        double k = sphere.refl;
         if (i_hit_r != -1) {
             here = here + (dir_r * res.second);
             TGAColor refl = get_color(here, spheres[i_hit_r], bounces - 1);
@@ -144,9 +162,9 @@ void render(char out_path[], unsigned char mode) {
     Point D = Point(d, -tan(deg_to_rad(FOV_h)) * d, -tan(deg_to_rad(FOV_v)) * d);
     // rotate ABD here
 
-    const double deltaX = (B.x - A.x) / width;
-    const double deltaY = (B.y - A.y) / width;
-    const double deltaZ = (A.z - D.z) / height;
+    double deltaX = (B.x - A.x) / width;
+    double deltaY = (B.y - A.y) / width;
+    double deltaZ = (A.z - D.z) / height;
     TGAImage image(width, height, TGAImage::RGBA);
     for (int w_canvas = 0; w_canvas < width; w_canvas++) {
         for (int h_canvas = 0; h_canvas < height; h_canvas++) {
@@ -176,8 +194,8 @@ void render(char out_path[], unsigned char mode) {
                     }
                     case COS_MODE: {
                         // NOT WORKING, NOT NEEDED
-                        const Point norm = get_normal(spheres[i_hit], here);
-                        const Point toLight = light_d.c - here;
+                        Point norm = get_normal(spheres[i_hit], here);
+                        Point toLight = light_d.c - here;
                         double cos = get_cos(norm, toLight - norm);
                         here_color = TGAColor(cos * 255, cos * 255, cos * 255, 255);
                     }
@@ -186,8 +204,8 @@ void render(char out_path[], unsigned char mode) {
                         break;
                     }
                     case REFL_MODE: {
-                        const Point norm = get_normal(spheres[i_hit], here);
-                        const Point refl = reflect(norm, here * -1. / len(here));
+                        Point norm = get_normal(spheres[i_hit], here);
+                        Point refl = reflect(norm, here * -1. / len(here));
                         here_color = TGAColor((refl.x + 1) * 127, (refl.y + 1) * 127, (refl.z + 1) * 127, 255);
                         break;
                     }
