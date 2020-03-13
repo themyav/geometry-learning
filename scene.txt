@@ -1,0 +1,25 @@
+# COMMENT
+# THIS IS THE SCENE FILE
+# EDIT IT CAREFULLY
+
+
+# Camera x y z h w rx ry rz
+
+Camera 0 0 0 1080 1920 0 0 0
+
+
+# Sphere x y z radius red green blue shrp refl
+
+Sphere 10 -3 -1 0.5 0 255 255 20 0.3
+
+
+# LightDirectional (aka Sun)
+# Only one is allowed
+# If there are more- last is being used
+# LightDirectional x y z strength
+
+LightDirectional -1 3 3 0.7
+
+
+# LightPoint x y z strength
+Light 3 -3 10 0.4
