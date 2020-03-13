@@ -22,7 +22,7 @@ const double FOV_v = 35;
 
 int width;
 int height;
-
+//edit file
 const TGAColor BACKGROUND_COLOR = TGAColor(160, 160, 160, 255);
 
 // ============================== Low functions =============================
