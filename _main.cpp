@@ -206,7 +206,7 @@ void render(Camera cam, int camera_num, int mode) {
 
 int main(int argc, char *argv[]) {
     cout << "Reading a scene file... ";
-    scene = Scene("scene.txt");
+    scene = Scene("example-scene.txt");
     cout << "Done\n";
     cout << "Found:\n" << scene.cameras.size() << " cameras,\n";
     cout << scene.spheres.size() << " spheres,\n";
